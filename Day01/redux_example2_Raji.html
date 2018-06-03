@@ -1,0 +1,84 @@
+<!-- State is immutable,Don't modify state directly,
+instaed return new state each time
+resultCollection = [...state.resultCollection,result] -->
+
+<!-- Display the collection of result -->
+<html>
+	<head>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/redux/3.7.2/redux.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js">
+		</script>
+	</head>
+	<body>
+		<input type="text" placeholder="number" id="number" />
+		<button id="squareButton">Square</button>
+		<button id="cubeButton">Cube</button>
+		<h1 id="message"></h1>
+		<script type="text/javascript">
+			const initialState = {
+				number:"",
+				resultCollection:[]
+			}
+			const reducer = (state=initialState,action)=>{
+				let number, result, resultCollection, found
+				switch(action.type){
+					case "SQUARE":
+						console.log(state);
+						number = action.payload.number
+						let square = number * number
+						result = `Square ${square}`
+						found = state.resultCollection.find((prevResult)=>{
+							return prevResult === result
+						});
+						if(!found){
+							resultCollection = [...state.resultCollection,result]
+						}else{
+							resultCollection = state.resultCollection
+						}
+						return {number, resultCollection}
+					break;
+					case "CUBE":
+						number =  action.payload.number
+						let cube = number * number * number
+						result = `Cube ${cube}`
+						found = state.resultCollection.find((prevResult)=>{
+							return prevResult === result
+						});
+						if(!found){
+							resultCollection = [...state.resultCollection,result]
+						}else{
+							resultCollection = state.resultCollection
+						}
+						return {number, resultCollection}
+					default:
+						return state
+
+				}
+			}
+			const {createStore} = Redux
+			const store = createStore(reducer);
+			// console.log(store.getState());
+
+			document.getElementById("squareButton").onclick=()=>{
+				let number = document.getElementById("number").value
+				let payload = {number}
+				store.dispatch({type:"SQUARE",payload})
+			}
+			document.getElementById("cubeButton").onclick=()=>{
+				let number = document.getElementById("number").value
+				let payload = {number}
+				store.dispatch({type:"CUBE",payload})
+			}
+
+			store.subscribe(()=>{
+				// console.log(store.getState());
+				let {resultCollection} = store.getState();
+				document.getElementById("message").innerHTML = resultCollection;
+			}
+
+			)
+
+		</script>
+
+	</body>		
+</html>

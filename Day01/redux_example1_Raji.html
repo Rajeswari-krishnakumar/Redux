@@ -1,0 +1,63 @@
+<html>
+	<head>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/redux/3.7.2/redux.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js">
+		</script>
+	</head>
+	<body>
+		<input type="text" placeholder="number" id="number" />
+		<button id="squareButton">Square</button>
+		<button id="cubeButton">Cube</button>
+		<h1 id="message"></h1>
+		<script type="text/javascript">
+			const initialState = {
+				number:"",
+				result:""
+			}
+			const reducer = (state=initialState,action)=>{
+				let number, result
+				switch(action.type){
+					case "SQUARE":
+						console.log(state);
+						number = action.payload.number
+						let square = number * number
+						result = `Square ${square}`
+						return {number, result}
+					break;
+					case "CUBE":
+						number =  action.payload.number
+						let cube = number * number * number
+						result = `Cube ${cube}`
+						return {number, result}
+					default:
+						return state
+
+				}
+			}
+			const {createStore} = Redux
+			const store = createStore(reducer);
+			// console.log(store.getState());
+
+			document.getElementById("squareButton").onclick=()=>{
+				let number = document.getElementById("number").value
+				let payload = {number}
+				store.dispatch({type:"SQUARE",payload})
+			}
+			document.getElementById("cubeButton").onclick=()=>{
+				let number = document.getElementById("number").value
+				let payload = {number}
+				store.dispatch({type:"CUBE",payload})
+			}
+
+			store.subscribe(()=>{
+				// console.log(store.getState());
+				let {result} = store.getState();
+				document.getElementById("message").innerHTML = result;
+			}
+
+			)
+
+		</script>
+
+	</body>		
+</html>
